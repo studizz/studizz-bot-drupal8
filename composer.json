@@ -1,0 +1,17 @@
+{
+    "name": "studizz/studizz-bot",
+    "description": "Studizz Bot plugin",
+    "type": "drupal-custom-module",
+    "license": "GPL-2.0-or-later",
+    "dist": {
+        "url": "https://plugins.studizz.fr/dp8-studizz-bot.zip",
+        "type": "zip"
+    },
+    "authors": [
+        {
+            "name": "johann liberman",
+            "email": "johann.liberman@studizz.fr"
+        }
+    ],
+    "require": {}
+}

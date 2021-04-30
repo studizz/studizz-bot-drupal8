@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Installation file for Studizz Bot module.
+ */
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_uninstall().
+ */
+function studizzbot_uninstall()
+{
+  //variable_del('studizzbot_token');
+}
+
+/**
+ * Implements hook_disable().
+ *
+ * Remove cache directory if module is disabled (or uninstalled).
+ */
+function studizzbot_disable()
+{
+
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function studizzbot_requirements($phase)
+{
+  $requirements = array();
+  //$t = get_t();
+
+  if ($phase == 'runtime')
+  {
+    $config = \Drupal::config('studizzbot.settings');
+
+    // Raise warning if Studizz Token has not been set yet.
+    //if (!preg_match('/^UA-\d+-\d+$/', variable_get('studizzbot_token', 'UA-')))
+    if (strlen(trim($config->get('studizzbot_token')))==0)
+    {
+      $requirements['studizzbot_token'] = array(
+        'title' => t('Studizz Bot module'),
+        'description' => t('Studizz Bot module has not been configured yet. Please configure its settings from the <a href=":url">Studizz Bot settings page</a>.', [':url' => Url::fromRoute('studizzbot.admin_settings_form')->toString()]),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => t('Not configured'),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+ /**
+ * Mise à jour du plugin Studizz Bot
+ *
+ *  
+ */ 
+
+function studizzbot_update_8001(&$sandbox) {
+
+  
+
+}

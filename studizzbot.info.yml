@@ -1,0 +1,18 @@
+name: 'Studizz Bot'
+description: 'Allows your site to use the Studizz bot.'
+type: module
+#core = 8.x
+package: Chatbots
+configure: studizzbot.admin_settings_form #admin/config/system/studizzbot
+test_dependencies:
+  - php:php
+  - token:token
+
+# Information added by Drupal.org packaging script on 2018-07-13
+version: '8.x-2.3'
+core: '8.x'
+project: 'studizz_bot'
+project status url: 'http://172.17.42.1:8080/studizz/plugins-cms/studizz-plugins/public/index.php/update/drupal'
+datestamp: 1531469032
+
+

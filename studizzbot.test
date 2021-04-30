@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Test file for Studizz Bot module.
+ */
+class StudizzBotBasicTest extends DrupalWebTestCase {
+
+  /**
+   * User without permissions to edit snippets.
+   *
+   * @var \StdClass
+   */
+  protected $noSnippetUser;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Studizz Bot basic tests',
+      'description' => 'Test basic functionality of Studizz Bot module.',
+      'group' => 'Studizz Bot',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('studizzbot');
+
+    $permissions = array(
+      'access administration pages',
+      'administer studizz bot',
+      'administer modules',
+      'administer site configuration',
+    );
+
+    // User to set up google_analytics.
+    $this->noSnippetUser = $this->drupalCreateUser($permissions);
+    $permissions[] = 'add JS snippets for studizz bot';
+    $this->admin_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->admin_user);
+  }
+
+  function testStudizzBotConfiguration() {
+    // Check if Configure link is available on 'Modules' page.
+    // Requires 'administer modules' permission.
+    $this->drupalGet('admin/modules');
+    $this->assertRaw('admin/config/system/studizzbot', '[testStudizzBotConfiguration]: Configure link from Modules page to Studizz Bot Settings page exists.');
+
+    // Check if Configure link is available on 'Status Reports' page. NOTE: Link is only shown without UA code configured.
+    // Requires 'administer site configuration' permission.
+    $this->drupalGet('admin/reports/status');
+    $this->assertRaw('admin/config/system/studizzbot', '[testStudizzBotConfiguration]: Configure link from Status Reports page to Studizz Bot Settings page exists.');
+
+    // Check for setting page's presence.
+    $this->drupalGet('admin/config/system/studizzbot');
+    $this->assertRaw(t('Web Property ID'), '[testStudizzBotConfiguration]: Settings page displayed.');
+
+    // Check for account code validation.
+    $edit['studizzbot_token'] = $this->randomName(2);
+    $this->drupalPost('admin/config/system/studizzbot', $edit, t('Save configuration'));
+    $this->assertRaw(t('A valid Studizz Bot Web Property ID is case sensitive and formatted like UA-xxxxxxx-yy.'), '[testStudizzBotConfiguration]: Invalid Web Property ID number validated.');
+  }
+
+  function testStudizzBotPageVisibility() {
+    // Verify that no tracking code is embedded into the webpage; if there is
+    // only the module installed, but UA code not configured. See #2246991.
+    $this->drupalGet('');
+    $this->assertNoRaw('https://communitizz.studizz.fr/bm/chat/webchat.js', '[testStudizzBotPageVisibility]: Tracking code is not displayed without code configured.');
+  }
+}
